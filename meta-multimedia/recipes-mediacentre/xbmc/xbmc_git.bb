@@ -3,7 +3,8 @@ DESCRIPTION = "XBMC Media Center"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=6eb631b6da7fdb01508a80213ffc35ff"
 
-DEPENDS = "libusb1 libcec libplist expat yajl gperf-native libxmu fribidi mpeg2dec ffmpeg samba fontconfig curl python libass libmodplug libmicrohttpd wavpack libmms cmake-native libsdl-image libsdl-mixer virtual/egl mysql5 sqlite3 libmms faad2 libcdio libpcre boost lzo enca avahi libsamplerate0 libxinerama libxrandr libxtst bzip2 virtual/libsdl jasper zip-native zlib libtinyxml libmad"
+DEPENDS = "libusb1 libcec libplist expat yajl gperf-native fribidi mpeg2dec ffmpeg samba fontconfig curl python libass libmodplug libmicrohttpd wavpack libmms cmake-native libsdl-image libsdl-mixer virtual/egl mysql5 sqlite3 libmms faad2 libcdio libpcre boost lzo enca avahi libsamplerate0 bzip2 virtual/libsdl jasper zip-native zlib libtinyxml libmad"
+DEPENDS += "${@base_contains('DISTRO_FEATURES', 'x11', 'libxmu libxinerama libxrandr libxtst', '', d)}"
 #require recipes/egl/egl.inc
 
 
@@ -41,6 +42,7 @@ EXTRA_OECONF = " \
     --disable-optical-drive \
     --enable-external-libraries \
     ${@base_contains('DISTRO_FEATURES', 'opengl', '--enable-gl', '--enable-gles', d)} \
+    ${@base_contains('DISTRO_FEATURES', 'x11', '--enable-x11', '--disable-x11', d)} \
 "
 
 FULL_OPTIMIZATION_armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O4 -ffast-math"
@@ -90,7 +92,7 @@ RRECOMMENDS_${PN}_append = " libcec \
                              python-re \
                              python-netclient \
                              libcurl \
-                             xdpyinfo \
+                             ${@base_contains('DISTRO_FEATURES', 'x11', 'xdpyinfo', '', d)} \
                              ${@base_contains('DISTRO_FEATURES', 'opengl', 'mesa-demos', '', d)} \
 "
 RRECOMMENDS_${PN}_append_libc-glibc = " glibc-charmap-ibm850 glibc-gconv-ibm850"
